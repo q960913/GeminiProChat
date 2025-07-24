@@ -14,7 +14,7 @@ export const startChatAndSendMessageStream = async(history: ChatMessage[], newMe
   const chat = model.startChat({
     history: history.map(msg => ({
       role: msg.role,
-      parts: msg.parts.map(part => part.text).join(''), // Join parts into a single string
+      parts: msg.parts.map(part => ({ text: part.text })), // Join parts into a single string
     })),
     generationConfig: {
       maxOutputTokens: 8000,
