@@ -9,7 +9,7 @@ const genAI = apiBaseUrl
   : new GoogleGenerativeAI(apiKey)
 
 export const startChatAndSendMessageStream = async (history: ChatMessage[], newMessage: { parts: { text: string }[] }) => {
-const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' })
+const model = genAI.getGenerativeModel({ model: modelName });
 const chat = model.startChat({
     history: history.map(msg => ({
       role: msg.role,
@@ -31,11 +31,11 @@ const result = await chat.sendMessageStream(newMessage.parts)
 const encodedStream = new ReadableStream({
     async start(controller) {
       const encoder = new TextEncoder()
-      for await (const chunk of result.stream) {
-        const text = await chunk.text()
-        const encoded = encoder.encode(text)
-        controller.enqueue(encoded)
-      }
+for await (const chunk of result.stream) {
+  const text = chunk.text();
+  const encoded = encoder.encode(text);
+  controller.enqueue(encoded);
+}
       controller.close()
     },
   })
